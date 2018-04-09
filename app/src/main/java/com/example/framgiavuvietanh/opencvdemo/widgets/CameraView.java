@@ -1,4 +1,4 @@
-package com.example.framgiavuvietanh.opencvdemo;
+package com.example.framgiavuvietanh.opencvdemo.widgets;
 
 import android.content.Context;
 import android.hardware.Camera;

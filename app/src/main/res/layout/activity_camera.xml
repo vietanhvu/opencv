@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     >
 
-    <com.example.framgiavuvietanh.opencvdemo.CameraView
+    <com.example.framgiavuvietanh.opencvdemo.widgets.CameraView
         android:id="@+id/camera_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

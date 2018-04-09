@@ -10,10 +10,10 @@
     tools:showIn="@layout/activity_main"
     >
 
-    <ImageView
-        android:id="@+id/image_view"
+    <com.example.framgiavuvietanh.opencvdemo.widgets.CropImageView
+        android:id="@+id/crop_image_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:adjustViewBounds="true"
         />
 

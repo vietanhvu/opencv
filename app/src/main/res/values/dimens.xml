@@ -1,3 +1,10 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="polygonViewCircleWidth">32dp</dimen>
+    <dimen name="polygonViewStrokeWidth">2dp</dimen>
+
+    <dimen name="crop_handle_corner_radius">7dp</dimen>
+    <dimen name="crop_handle_edge_radius">5dp</dimen>
+    <dimen name="crop_edge_width">3dp</dimen>
 </resources>

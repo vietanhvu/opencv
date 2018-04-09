@@ -3,6 +3,7 @@ package com.example.framgiavuvietanh.opencvdemo;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -16,6 +17,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import com.example.framgiavuvietanh.opencvdemo.widgets.CropImageView;
+import com.example.framgiavuvietanh.opencvdemo.widgets.HighlightView;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -50,12 +53,12 @@ public class MainActivity extends AppCompatActivity {
     private boolean ready;
 
     private View mProgressBar;
-    
-    private ImageView mImageView;
 
     private Mat mSrc;
 
     private MatOfPoint2f mApproxCurve;
+
+    private CropImageView mCropImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,14 +67,14 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mImageView = findViewById(R.id.image_view);
+        mCropImageView = findViewById(R.id.crop_image_view);
         findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (ready) {
                     mSrc = null;
                     mApproxCurve = null;
-                    mImageView.setImageBitmap(null);
+                    mCropImageView.setImageBitmap(null);
                     //startActivityForResult(new Intent(MainActivity.this, CameraActivity.class),
                     //        102);
                     Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -110,8 +113,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (mSrc != null && mApproxCurve != null) {
-                    mImageView.setImageBitmap(
-                            fixPerspective(mSrc, mApproxCurve));
+                    mCropImageView.setImageBitmap(fixPerspective(mSrc, mApproxCurve));
                 } else {
                     Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                             .setAction("Action", null)
@@ -119,6 +121,16 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+        Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.sae);
+        mCropImageView.setImageBitmapResetBase(bm, true); //
+        List<Point> lp = new ArrayList<>();
+        lp.add(new Point(0, 0));
+        lp.add(new Point(100, 0));
+        lp.add(new Point(100, 100));
+        lp.add(new Point(0, 100));
+        mCropImageView.add(
+                new HighlightView(mCropImageView, new Rect(0, 0, bm.getWidth(), bm.getHeight()),
+                        lp));
         mProgressBar = findViewById(R.id.progress_bar);
         ready = OpenCVLoader.initDebug();
     }
@@ -161,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 protected void onPostExecute(Bitmap bitmap) {
                     if (bitmap != null) {
-                        mImageView.setImageBitmap(bitmap);
+                        mCropImageView.setImageBitmap(bitmap);
                     }
                     mProgressBar.setVisibility(View.GONE);
                 }
@@ -185,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 protected void onPostExecute(Bitmap bitmap) {
                     if (bitmap != null) {
-                        mImageView.setImageBitmap(bitmap);
+                        mCropImageView.setImageBitmap(bitmap);
                     }
                     mProgressBar.setVisibility(View.GONE);
                 }
@@ -223,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
 
         MatOfPoint2f approxCurve = null;
 
-        double maxArea = 3000;
+        double maxArea = 5000;
         int maxId = -1;
 
         for (int c = 0; c < 3; c++) {
