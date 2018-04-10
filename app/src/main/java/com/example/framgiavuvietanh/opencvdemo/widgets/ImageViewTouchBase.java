@@ -150,7 +150,6 @@ abstract class ImageViewTouchBase extends android.support.v7.widget.AppCompatIma
         if (viewWidth <= 0) {
             mOnLayoutRunnable = new Runnable() {
                 public void run() {
-
                     setImageRotateBitmapResetBase(bitmap, resetSupp);
                 }
             };

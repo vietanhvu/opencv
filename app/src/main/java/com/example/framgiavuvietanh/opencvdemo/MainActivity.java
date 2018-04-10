@@ -34,12 +34,10 @@ import org.opencv.core.MatOfPoint;
 import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.Point;
 import org.opencv.core.RotatedRect;
-import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.utils.Converters;
 
-import static android.graphics.Canvas.EdgeType.BW;
 import static org.opencv.imgproc.Imgproc.COLOR_BGR2GRAY;
 import static org.opencv.imgproc.Imgproc.INTER_LINEAR;
 import static org.opencv.imgproc.Imgproc.THRESH_OTSU;
@@ -58,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Mat mSrc;
 
-    private MatOfPoint2f mApproxCurve;
+    private List<Point> mApproxCurve = new ArrayList<>();
 
     private CropImageView mCropImageView;
 
@@ -90,8 +88,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (ready) {
                     mSrc = null;
-                    mApproxCurve = null;
-                    mCropImageView.setImageBitmap(null);
+                    mCropImageView.setHighlightView(null);
+                    mCropImageView.setImageBitmapResetBase(null, true);
                     //startActivityForResult(new Intent(MainActivity.this, CameraActivity.class),
                     //        102);
                     Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -114,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                     //try {
-                    //    mImageView.setImageBitmap(findRectangle(
+                    //    mImageView.setImageBitmapResetBase(findRectangle(
                     //            Utils.loadResource(MainActivity.this, R.drawable.test)));
                     //} catch (Exception e) {
                     //    e.printStackTrace();
@@ -129,8 +127,10 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.fab_rotate).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mSrc != null && mApproxCurve != null) {
-                    mCropImageView.setImageBitmap(fixPerspective(mSrc, mApproxCurve));
+                if (mSrc != null && mApproxCurve != null && !mApproxCurve.isEmpty()) {
+                    mCropImageView.setHighlightView(null);
+                    mCropImageView.setImageBitmapResetBase(fixPerspective(mSrc, mApproxCurve),
+                            true);
                 } else {
                     Snackbar.make(view, "Cannot detect any rectangle.", Snackbar.LENGTH_LONG)
                             .setAction("Hide", null)
@@ -138,16 +138,21 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.sae);
-        mCropImageView.setImageBitmapResetBase(bm, true); //
-        List<Point> lp = new ArrayList<>();
-        lp.add(new Point(0, 0));
-        lp.add(new Point(bm.getWidth(), 0));
-        lp.add(new Point(bm.getWidth(), bm.getHeight()));
-        lp.add(new Point(0, bm.getHeight()));
-        mCropImageView.add(
-                new HighlightView(mCropImageView, new Rect(0, 0, bm.getWidth(), bm.getHeight()),
-                        lp));
+
+        findViewById(R.id.fab_crop).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mSrc != null) {
+                    float[] pts = mCropImageView.getHighlightView().getTrapezoid();
+                    mCropImageView.setHighlightView(null);
+                    mCropImageView.setImageBitmapResetBase(fixPerspective(mSrc, pts), true);
+                } else {
+                    Snackbar.make(view, "Cannot detect any rectangle.", Snackbar.LENGTH_LONG)
+                            .setAction("Hide", null)
+                            .show();
+                }
+            }
+        });
         mProgressBar = findViewById(R.id.progress_bar);
         OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_0_0, getApplicationContext(),
                 mLoaderCallback);
@@ -179,7 +184,11 @@ public class MainActivity extends AppCompatActivity {
                 protected Bitmap doInBackground(Void... voids) {
                     try {
                         Mat mat = new Mat();
-                        Utils.bitmapToMat(BitmapFactory.decodeFile(mCurrentPhotoPath), mat);
+                        Utils.bitmapToMat(
+                                com.example.framgiavuvietanh.opencvdemo.Utils.rotateBitmap(
+                                        BitmapFactory.decodeFile(mCurrentPhotoPath),
+                                        com.example.framgiavuvietanh.opencvdemo.Utils.getExifOrientation(
+                                                mCurrentPhotoPath)), mat);
                         mSrc = mat;
                         return findRectangle(mat);
                     } catch (Exception e) {
@@ -191,7 +200,20 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 protected void onPostExecute(Bitmap bitmap) {
                     if (bitmap != null) {
-                        mCropImageView.setImageBitmap(bitmap);
+                        mCropImageView.setImageBitmapResetBase(bitmap, true);
+                        if (mApproxCurve != null && !mApproxCurve.isEmpty()) {
+                            mCropImageView.setHighlightView(new HighlightView(mCropImageView,
+                                    new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight()),
+                                    mApproxCurve));
+                        } else {
+                            List<Point> lp = new ArrayList<>();
+                            lp.add(new Point(0, 0));
+                            lp.add(new Point(bitmap.getWidth(), 0));
+                            lp.add(new Point(bitmap.getWidth(), bitmap.getHeight()));
+                            lp.add(new Point(0, bitmap.getHeight()));
+                            mCropImageView.setHighlightView(new HighlightView(mCropImageView,
+                                    new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight()), lp));
+                        }
                     }
                     mProgressBar.setVisibility(View.GONE);
                 }
@@ -215,7 +237,20 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 protected void onPostExecute(Bitmap bitmap) {
                     if (bitmap != null) {
-                        mCropImageView.setImageBitmap(bitmap);
+                        mCropImageView.setImageBitmapResetBase(bitmap, true);
+                        if (mApproxCurve != null && !mApproxCurve.isEmpty()) {
+                            mCropImageView.setHighlightView(new HighlightView(mCropImageView,
+                                    new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight()),
+                                    mApproxCurve));
+                        } else {
+                            List<Point> lp = new ArrayList<>();
+                            lp.add(new Point(0, 0));
+                            lp.add(new Point(bitmap.getWidth(), 0));
+                            lp.add(new Point(bitmap.getWidth(), bitmap.getHeight()));
+                            lp.add(new Point(0, bitmap.getHeight()));
+                            mCropImageView.setHighlightView(new HighlightView(mCropImageView,
+                                    new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight()), lp));
+                        }
                     }
                     mProgressBar.setVisibility(View.GONE);
                 }
@@ -250,9 +285,9 @@ public class MainActivity extends AppCompatActivity {
         List<MatOfPoint> contours = new ArrayList<>();
         //
         //List<Mat> blurredChannel = new ArrayList<>();
-        //blurredChannel.add(blurred);
+        //blurredChannel.setHighlightView(blurred);
         //List<Mat> gray0Channel = new ArrayList<>();
-        //gray0Channel.add(gray0);
+        //gray0Channel.setHighlightView(gray0);
 
         MatOfPoint2f approxCurve = null;
 
@@ -298,9 +333,7 @@ public class MainActivity extends AppCompatActivity {
         //}
 
         if (maxId >= 0) {
-            Imgproc.drawContours(src, contours, maxId, new Scalar(255, 0, 0, 255), 8, BW.ordinal(),
-                    new Mat(), 1, new Point());
-            mApproxCurve = approxCurve;
+            mApproxCurve = approxCurve.toList();
             //circle(src, approxCurve.toList().get(0), 150, new Scalar(0, 0, 255, 255), 10);
         }
 
@@ -310,8 +343,23 @@ public class MainActivity extends AppCompatActivity {
         return bmp;
     }
 
-    private Bitmap fixPerspective(Mat src, MatOfPoint2f approxCurve) {
-        RotatedRect rect = Imgproc.minAreaRect(approxCurve);
+    private Bitmap fixPerspective(Mat src, float[] trapezoid) {
+        //the 4 points of the quad
+        Point ocvPIn1 = new Point((int) trapezoid[6], (int) trapezoid[7]);//tl
+        Point ocvPIn2 = new Point((int) trapezoid[4], (int) trapezoid[5]); //tr
+        Point ocvPIn3 = new Point((int) trapezoid[2], (int) trapezoid[3]);//br
+        Point ocvPIn4 = new Point((int) trapezoid[0], (int) trapezoid[1]);//bl
+        List<Point> p = new ArrayList<>();
+        p.add(ocvPIn1);
+        p.add(ocvPIn2);
+        p.add(ocvPIn3);
+        p.add(ocvPIn4);
+        return fixPerspective(src, p);
+    }
+
+    private Bitmap fixPerspective(Mat src, List<Point> approxCurve) {
+        RotatedRect rect = Imgproc.minAreaRect(
+                new MatOfPoint2f(approxCurve.toArray(new Point[approxCurve.size()])));
         // Be sure that largest side is the height
         if (rect.size.width > rect.size.height) {
             double tempW = rect.size.width;
@@ -320,21 +368,20 @@ public class MainActivity extends AppCompatActivity {
             rect.angle -= 90.f;
         }
 
-        List<Point> l = approxCurve.toList();
-        double rightEdge = euclideanDistance(l.get(0), l.get(1));
-        double leftEdge = euclideanDistance(l.get(0), l.get(3));
+        double rightEdge = euclideanDistance(approxCurve.get(0), approxCurve.get(1));
+        double leftEdge = euclideanDistance(approxCurve.get(0), approxCurve.get(3));
         Mat src1;
         List<Point> lp = new ArrayList<>();
         if (leftEdge > rightEdge) {
-            lp.add(l.get(1));
-            lp.add(l.get(0));
-            lp.add(l.get(3));
-            lp.add(l.get(2));
+            lp.add(approxCurve.get(1));
+            lp.add(approxCurve.get(0));
+            lp.add(approxCurve.get(3));
+            lp.add(approxCurve.get(2));
         } else {
-            lp.add(l.get(2));
-            lp.add(l.get(1));
-            lp.add(l.get(0));
-            lp.add(l.get(3));
+            lp.add(approxCurve.get(2));
+            lp.add(approxCurve.get(1));
+            lp.add(approxCurve.get(0));
+            lp.add(approxCurve.get(3));
         }
         src1 = Converters.vector_Point2f_to_Mat(lp);
 

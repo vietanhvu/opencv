@@ -36,10 +36,19 @@
         />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_rotate"
+        android:id="@+id/fab_crop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|start"
+        android:layout_margin="@dimen/fab_margin"
+        app:srcCompat="@android:drawable/ic_menu_crop"
+        />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_rotate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@android:drawable/ic_menu_rotate"
         />

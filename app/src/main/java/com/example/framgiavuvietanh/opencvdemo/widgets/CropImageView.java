@@ -20,16 +20,15 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 
 /**
  * Created by renard on 13/11/14.
  */
 public class CropImageView extends ImageViewTouchBase {
-    HighlightView mHighlightView;
+    private HighlightView mHighlightView;
 
-    HighlightView mMotionHighlightView = null;
+    private HighlightView mMotionHighlightView = null;
     float mLastX, mLastY;
     int mMotionEdge;
 
@@ -38,11 +37,11 @@ public class CropImageView extends ImageViewTouchBase {
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-        if (mBitmapDisplayed.getBitmap() != null) {
+        if (mBitmapDisplayed.getBitmap() != null && mHighlightView != null) {
             mHighlightView.mMatrix.set(getImageMatrix());
             mHighlightView.invalidate();
             if (mHighlightView.mIsFocused) {
-                centerBasedOnHighlightView(mHighlightView);
+                //centerBasedOnHighlightView(mHighlightView);
             }
         }
     }
@@ -115,7 +114,7 @@ public class CropImageView extends ImageViewTouchBase {
                 break;
             case MotionEvent.ACTION_UP:
                 if (mMotionHighlightView != null) {
-                    centerBasedOnHighlightView(mMotionHighlightView);
+                    //centerBasedOnHighlightView(mMotionHighlightView);
                     mMotionHighlightView.setMode(HighlightView.ModifyMode.None);
                 }
                 mMotionHighlightView = null;
@@ -205,13 +204,17 @@ public class CropImageView extends ImageViewTouchBase {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        if (!isInEditMode()) {
+        if (!isInEditMode() && mHighlightView != null) {
             mHighlightView.draw(canvas);
         }
     }
 
-    public void add(HighlightView hv) {
+    public void setHighlightView(HighlightView hv) {
         mHighlightView = hv;
         invalidate();
+    }
+
+    public HighlightView getHighlightView() {
+        return mHighlightView;
     }
 }

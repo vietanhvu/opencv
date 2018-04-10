@@ -88,7 +88,7 @@ public class HighlightView {
 
         mDrawRect = computeLayout();
 
-        mFocusPaint.setARGB(125, 50, 50, 50);
+        mFocusPaint.setARGB(200, 50, 50, 50);
         mFocusPaint.setStyle(Paint.Style.FILL);
 
         mOutlinePaint.setARGB(0xFF, Color.red(progressColor), Color.green(progressColor),
@@ -98,7 +98,6 @@ public class HighlightView {
         mOutlinePaint.setAntiAlias(true);
 
         mMode = ModifyMode.None;
-        android.content.res.Resources resources = mContext.getResources();
     }
 
     public boolean hasFocus() {
@@ -251,7 +250,8 @@ public class HighlightView {
         if (edge == GROW_NONE) {
             return;
         } else if (edge == MOVE) {
-            mTrapzoid.moveBy(dx, dy);
+            // Disable/Enable move
+            //mTrapzoid.moveBy(dx, dy);
         } else {
             mTrapzoid.growBy(edge, dx, dy);
         }
