@@ -27,10 +27,8 @@ import java.util.Date;
 import java.util.List;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
-import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
-import org.opencv.core.MatOfInt;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.Point;
@@ -41,9 +39,12 @@ import org.opencv.imgproc.Imgproc;
 import org.opencv.utils.Converters;
 
 import static android.graphics.Canvas.EdgeType.BW;
+import static org.opencv.imgproc.Imgproc.COLOR_BGR2GRAY;
 import static org.opencv.imgproc.Imgproc.INTER_LINEAR;
-import static org.opencv.imgproc.Imgproc.circle;
+import static org.opencv.imgproc.Imgproc.THRESH_OTSU;
+import static org.opencv.imgproc.Imgproc.cvtColor;
 import static org.opencv.imgproc.Imgproc.getPerspectiveTransform;
+import static org.opencv.imgproc.Imgproc.threshold;
 import static org.opencv.imgproc.Imgproc.warpPerspective;
 
 public class MainActivity extends AppCompatActivity {
@@ -221,64 +222,69 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private Bitmap findRectangle(Mat src) throws Exception {
-        Mat blurred = src.clone();
-        Imgproc.medianBlur(src, blurred, 9);
-
-        Mat gray0 = new Mat(blurred.size(), CvType.CV_8U), gray = new Mat();
-
+        Mat clone = src.clone(), gray = new Mat(), blur = new Mat(), canny = new Mat();
+        cvtColor(clone, gray, COLOR_BGR2GRAY);
+        threshold(gray, gray, 0, 255, THRESH_OTSU);
+        Imgproc.blur(gray, blur, new Size(3, 3));
+        //Imgproc.medianBlur(src, blurred, 9);
+        //
+        //Mat gray0 = new Mat(blurred.size(), CvType.CV_8U), gray = new Mat();
+        //
         List<MatOfPoint> contours = new ArrayList<>();
-
-        List<Mat> blurredChannel = new ArrayList<>();
-        blurredChannel.add(blurred);
-        List<Mat> gray0Channel = new ArrayList<>();
-        gray0Channel.add(gray0);
+        //
+        //List<Mat> blurredChannel = new ArrayList<>();
+        //blurredChannel.add(blurred);
+        //List<Mat> gray0Channel = new ArrayList<>();
+        //gray0Channel.add(gray0);
 
         MatOfPoint2f approxCurve = null;
 
         double maxArea = 5000;
         int maxId = -1;
 
-        for (int c = 0; c < 3; c++) {
-            int ch[] = { c, 0 };
-            Core.mixChannels(blurredChannel, gray0Channel, new MatOfInt(ch));
+        //for (int c = 0; c < 3; c++) {
+        //    int ch[] = { c, 0 };
+        //    Core.mixChannels(blurredChannel, gray0Channel, new MatOfInt(ch));
 
-            Imgproc.Canny(gray0, gray, 10, 20, 3, true); // true ?
-            Imgproc.dilate(gray, gray, new Mat(), new Point(-1, -1), 1); // 1
+        Imgproc.Canny(blur, canny, 0, 100, 3, true); // true ?
+        Imgproc.dilate(canny, canny, new Mat(), new Point(-1, -1), 1); // 1
 
-            Imgproc.findContours(gray, contours, new Mat(), Imgproc.RETR_EXTERNAL,
-                    Imgproc.CHAIN_APPROX_SIMPLE);
+        Imgproc.findContours(canny, contours, new Mat(), Imgproc.RETR_EXTERNAL,
+                Imgproc.CHAIN_APPROX_SIMPLE);
 
-            for (MatOfPoint contour : contours) {
-                MatOfPoint2f temp = new MatOfPoint2f(contour.toArray());
+        for (MatOfPoint contour : contours) {
+            MatOfPoint2f temp = new MatOfPoint2f(contour.toArray());
 
-                double area = Imgproc.contourArea(contour);
-                approxCurve = new MatOfPoint2f();
-                Imgproc.approxPolyDP(temp, approxCurve, Imgproc.arcLength(temp, true) * 0.02, true);
+            double area = Imgproc.contourArea(contour);
+            if (area < maxArea) continue;
 
-                if (approxCurve.total() == 4 && area >= maxArea) {
-                    double maxCosine = 0;
+            approxCurve = new MatOfPoint2f();
+            Imgproc.approxPolyDP(temp, approxCurve, Imgproc.arcLength(temp, true) * 0.02, true);
 
-                    List<Point> curves = approxCurve.toList();
-                    for (int j = 2; j < 5; j++) {
+            if (approxCurve.total() == 4) {
+                //double maxCosine = 0;
 
-                        double cosine = Math.abs(
-                                angle(curves.get(j % 4), curves.get(j - 2), curves.get(j - 1)));
-                        maxCosine = Math.max(maxCosine, cosine);
-                    }
+                //List<Point> curves = approxCurve.toList();
+                //for (int j = 2; j < 5; j++) {
 
-                    if (maxCosine < 0.3) {
-                        maxArea = area;
-                        maxId = contours.indexOf(contour);
-                    }
-                }
+                //double cosine = Math.abs(
+                //        angle(curves.get(j % 4), curves.get(j - 2), curves.get(j - 1)));
+                //maxCosine = Math.max(maxCosine, cosine);
+                //}
+
+                //if (maxCosine < 0.3) {
+                maxArea = area;
+                maxId = contours.indexOf(contour);
+                //}
             }
         }
+        //}
 
         if (maxId >= 0) {
             Imgproc.drawContours(src, contours, maxId, new Scalar(255, 0, 0, 255), 8, BW.ordinal(),
                     new Mat(), 1, new Point());
             mApproxCurve = approxCurve;
-            circle(src, approxCurve.toList().get(0), 150, new Scalar(0, 0, 255, 255), 10);
+            //circle(src, approxCurve.toList().get(0), 150, new Scalar(0, 0, 255, 255), 10);
         }
 
         Bitmap bmp = Bitmap.createBitmap(src.cols(), src.rows(), Bitmap.Config.ARGB_8888);
