@@ -103,8 +103,8 @@ public class MainActivity extends AppCompatActivity {
                     //    e.printStackTrace();
                     //}
                 } else {
-                    Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null)
+                    Snackbar.make(view, "OpenCV is not loaded.", Snackbar.LENGTH_LONG)
+                            .setAction("Hide", null)
                             .show();
                 }
             }
@@ -115,8 +115,8 @@ public class MainActivity extends AppCompatActivity {
                 if (mSrc != null && mApproxCurve != null) {
                     mCropImageView.setImageBitmap(fixPerspective(mSrc, mApproxCurve));
                 } else {
-                    Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null)
+                    Snackbar.make(view, "Cannot detect any rectangle.", Snackbar.LENGTH_LONG)
+                            .setAction("Hide", null)
                             .show();
                 }
             }
@@ -125,9 +125,9 @@ public class MainActivity extends AppCompatActivity {
         mCropImageView.setImageBitmapResetBase(bm, true); //
         List<Point> lp = new ArrayList<>();
         lp.add(new Point(0, 0));
-        lp.add(new Point(100, 0));
-        lp.add(new Point(100, 100));
-        lp.add(new Point(0, 100));
+        lp.add(new Point(bm.getWidth(), 0));
+        lp.add(new Point(bm.getWidth(), bm.getHeight()));
+        lp.add(new Point(0, bm.getHeight()));
         mCropImageView.add(
                 new HighlightView(mCropImageView, new Rect(0, 0, bm.getWidth(), bm.getHeight()),
                         lp));
