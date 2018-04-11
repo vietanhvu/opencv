@@ -16,7 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.Toast;
 import com.example.framgiavuvietanh.opencvdemo.widgets.CropImageView;
 import com.example.framgiavuvietanh.opencvdemo.widgets.HighlightView;
 import java.io.File;
@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
 import org.opencv.core.CvType;
@@ -60,6 +61,21 @@ public class MainActivity extends AppCompatActivity {
     private MatOfPoint2f mApproxCurve;
 
     private CropImageView mCropImageView;
+
+    private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
+        @Override
+        public void onManagerConnected(int status) {
+            switch (status) {
+                case SUCCESS:
+                    ready = true;
+                    break;
+                default:
+                    Toast.makeText(MainActivity.this, "OpenCV init fail.", Toast.LENGTH_SHORT)
+                            .show();
+                    super.onManagerConnected(status);
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,7 +149,8 @@ public class MainActivity extends AppCompatActivity {
                 new HighlightView(mCropImageView, new Rect(0, 0, bm.getWidth(), bm.getHeight()),
                         lp));
         mProgressBar = findViewById(R.id.progress_bar);
-        ready = OpenCVLoader.initDebug();
+        OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_0_0, getApplicationContext(),
+                mLoaderCallback);
     }
 
     @Override
