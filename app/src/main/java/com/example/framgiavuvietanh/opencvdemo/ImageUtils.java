@@ -21,33 +21,35 @@ public class ImageUtils {
     }
 
     public static Bitmap fixImageOrientation(Bitmap bitmap, String imgUri) {
-        Bitmap finalBitmap = null;
+        Bitmap finalBitmap;
 
-        ExifInterface ei = null;
+        ExifInterface ei;
         try {
             ei = new ExifInterface(imgUri);
+            int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+
+            switch (orientation) {
+                case ExifInterface.ORIENTATION_NORMAL:
+                    finalBitmap = rotateImage(bitmap, 90);
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    finalBitmap = rotateImage(bitmap, 90);
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    finalBitmap = rotateImage(bitmap, 180);
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    finalBitmap = rotateImage(bitmap, 270);
+                    break;
+                default:
+                    finalBitmap = bitmap;
+                    break;
+            }
+
+            return finalBitmap;
         } catch (IOException e) {
             e.printStackTrace();
         }
-        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
-
-        switch (orientation) {
-            case ExifInterface.ORIENTATION_NORMAL:
-                finalBitmap = rotateImage(bitmap, 90);
-                break;
-            case ExifInterface.ORIENTATION_ROTATE_90:
-                finalBitmap = rotateImage(bitmap, 90);
-                break;
-            case ExifInterface.ORIENTATION_ROTATE_180:
-                finalBitmap = rotateImage(bitmap, 180);
-            case ExifInterface.ORIENTATION_ROTATE_270:
-                finalBitmap = rotateImage(bitmap, 270);
-                break;
-            default:
-                finalBitmap = bitmap;
-                break;
-        }
-
-        return finalBitmap;
+        return null;
     }
 }
