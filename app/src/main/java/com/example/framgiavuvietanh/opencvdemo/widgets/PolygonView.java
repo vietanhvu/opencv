@@ -93,7 +93,7 @@ public class PolygonView extends FrameLayout {
     }
 
     public Map<Integer, PointF> getPoints() {
-        List<PointF> points = new ArrayList<PointF>();
+        List<PointF> points = new ArrayList<>();
         points.add(new PointF(pointer1.getX(), pointer1.getY()));
         points.add(new PointF(pointer2.getX(), pointer2.getY()));
         points.add(new PointF(pointer3.getX(), pointer3.getY()));
@@ -102,8 +102,17 @@ public class PolygonView extends FrameLayout {
         return getOrderedPoints(points);
     }
 
-    public Map<Integer, PointF> getOrderedPoints(List<PointF> points) {
+    public List<PointF> getPointArray() {
+        List<PointF> points = new ArrayList<>();
+        points.add(new PointF(pointer1.getX(), pointer1.getY()));
+        points.add(new PointF(pointer2.getX(), pointer2.getY()));
+        points.add(new PointF(pointer3.getX(), pointer3.getY()));
+        points.add(new PointF(pointer4.getX(), pointer4.getY()));
 
+        return points;
+    }
+
+    public Map<Integer, PointF> getOrderedPoints(List<PointF> points) {
         PointF centerPoint = new PointF();
         int size = points.size();
         for (PointF pointF : points) {
