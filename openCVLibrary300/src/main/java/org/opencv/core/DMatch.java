@@ -54,8 +54,14 @@ public class DMatch {
 
     @Override
     public String toString() {
-        return "DMatch [queryIdx=" + queryIdx + ", trainIdx=" + trainIdx
-                + ", imgIdx=" + imgIdx + ", distance=" + distance + "]";
+        return "DMatch [queryIdx="
+                + queryIdx
+                + ", trainIdx="
+                + trainIdx
+                + ", imgIdx="
+                + imgIdx
+                + ", distance="
+                + distance
+                + "]";
     }
-
 }

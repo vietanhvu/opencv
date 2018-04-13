@@ -22,12 +22,16 @@ public class Scalar {
     }
 
     public Scalar(double[] vals) {
-        if (vals != null && vals.length == 4)
+        if (vals != null && vals.length == 4) {
             val = vals.clone();
-        else {
+        } else {
             val = new double[4];
             set(vals);
         }
+    }
+
+    public static Scalar all(double v) {
+        return new Scalar(v, v, v, v);
     }
 
     public void set(double[] vals) {
@@ -36,12 +40,9 @@ public class Scalar {
             val[1] = vals.length > 1 ? vals[1] : 0;
             val[2] = vals.length > 2 ? vals[2] : 0;
             val[3] = vals.length > 3 ? vals[3] : 0;
-        } else
+        } else {
             val[0] = val[1] = val[2] = val[3] = 0;
-    }
-
-    public static Scalar all(double v) {
-        return new Scalar(v, v, v, v);
+        }
     }
 
     public Scalar clone() {
@@ -78,13 +79,11 @@ public class Scalar {
         if (this == obj) return true;
         if (!(obj instanceof Scalar)) return false;
         Scalar it = (Scalar) obj;
-        if (!java.util.Arrays.equals(val, it.val)) return false;
-        return true;
+        return java.util.Arrays.equals(val, it.val);
     }
 
     @Override
     public String toString() {
         return "[" + val[0] + ", " + val[1] + ", " + val[2] + ", " + val[3] + "]";
     }
-
 }
