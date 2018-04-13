@@ -1,4 +1,3 @@
-
 //
 // This file is auto-generated. Please don't modify it!
 //
@@ -10,339 +9,145 @@ import org.opencv.core.Mat;
 //javadoc: DTrees
 public class DTrees extends StatModel {
 
-    protected DTrees(long addr) { super(addr); }
+    public static final int PREDICT_AUTO = 0, PREDICT_SUM = (1 << 8), PREDICT_MAX_VOTE = (2 << 8),
+            PREDICT_MASK = (3 << 8);
 
-
-    public static final int
-            PREDICT_AUTO = 0,
-            PREDICT_SUM = (1<<8),
-            PREDICT_MAX_VOTE = (2<<8),
-            PREDICT_MASK = (3<<8);
-
+    protected DTrees(long addr) {
+        super(addr);
+    }
 
     //
     // C++:  int getMaxCategories()
     //
 
-    //javadoc: DTrees::getMaxCategories()
-    public  int getMaxCategories()
-    {
-        
-        int retVal = getMaxCategories_0(nativeObj);
-        
-        return retVal;
-    }
+    //javadoc: DTrees::create()
+    public static DTrees create() {
 
+        return new DTrees(create_0());
+    }
 
     //
     // C++:  void setMaxCategories(int val)
     //
 
-    //javadoc: DTrees::setMaxCategories(val)
-    public  void setMaxCategories(int val)
-    {
-        
-        setMaxCategories_0(nativeObj, val);
-        
-        return;
-    }
-
+    // C++:  int getMaxCategories()
+    private static native int getMaxCategories_0(long nativeObj);
 
     //
     // C++:  int getMaxDepth()
     //
 
-    //javadoc: DTrees::getMaxDepth()
-    public  int getMaxDepth()
-    {
-        
-        int retVal = getMaxDepth_0(nativeObj);
-        
-        return retVal;
-    }
-
+    // C++:  void setMaxCategories(int val)
+    private static native void setMaxCategories_0(long nativeObj, int val);
 
     //
     // C++:  void setMaxDepth(int val)
     //
 
-    //javadoc: DTrees::setMaxDepth(val)
-    public  void setMaxDepth(int val)
-    {
-        
-        setMaxDepth_0(nativeObj, val);
-        
-        return;
-    }
-
+    // C++:  int getMaxDepth()
+    private static native int getMaxDepth_0(long nativeObj);
 
     //
     // C++:  int getMinSampleCount()
     //
 
-    //javadoc: DTrees::getMinSampleCount()
-    public  int getMinSampleCount()
-    {
-        
-        int retVal = getMinSampleCount_0(nativeObj);
-        
-        return retVal;
-    }
-
+    // C++:  void setMaxDepth(int val)
+    private static native void setMaxDepth_0(long nativeObj, int val);
 
     //
     // C++:  void setMinSampleCount(int val)
     //
 
-    //javadoc: DTrees::setMinSampleCount(val)
-    public  void setMinSampleCount(int val)
-    {
-        
-        setMinSampleCount_0(nativeObj, val);
-        
-        return;
-    }
-
+    // C++:  int getMinSampleCount()
+    private static native int getMinSampleCount_0(long nativeObj);
 
     //
     // C++:  int getCVFolds()
     //
 
-    //javadoc: DTrees::getCVFolds()
-    public  int getCVFolds()
-    {
-        
-        int retVal = getCVFolds_0(nativeObj);
-        
-        return retVal;
-    }
-
+    // C++:  void setMinSampleCount(int val)
+    private static native void setMinSampleCount_0(long nativeObj, int val);
 
     //
     // C++:  void setCVFolds(int val)
     //
 
-    //javadoc: DTrees::setCVFolds(val)
-    public  void setCVFolds(int val)
-    {
-        
-        setCVFolds_0(nativeObj, val);
-        
-        return;
-    }
-
+    // C++:  int getCVFolds()
+    private static native int getCVFolds_0(long nativeObj);
 
     //
     // C++:  bool getUseSurrogates()
     //
 
-    //javadoc: DTrees::getUseSurrogates()
-    public  boolean getUseSurrogates()
-    {
-        
-        boolean retVal = getUseSurrogates_0(nativeObj);
-        
-        return retVal;
-    }
-
+    // C++:  void setCVFolds(int val)
+    private static native void setCVFolds_0(long nativeObj, int val);
 
     //
     // C++:  void setUseSurrogates(bool val)
     //
 
-    //javadoc: DTrees::setUseSurrogates(val)
-    public  void setUseSurrogates(boolean val)
-    {
-        
-        setUseSurrogates_0(nativeObj, val);
-        
-        return;
-    }
-
+    // C++:  bool getUseSurrogates()
+    private static native boolean getUseSurrogates_0(long nativeObj);
 
     //
     // C++:  bool getUse1SERule()
     //
 
-    //javadoc: DTrees::getUse1SERule()
-    public  boolean getUse1SERule()
-    {
-        
-        boolean retVal = getUse1SERule_0(nativeObj);
-        
-        return retVal;
-    }
-
+    // C++:  void setUseSurrogates(bool val)
+    private static native void setUseSurrogates_0(long nativeObj, boolean val);
 
     //
     // C++:  void setUse1SERule(bool val)
     //
 
-    //javadoc: DTrees::setUse1SERule(val)
-    public  void setUse1SERule(boolean val)
-    {
-        
-        setUse1SERule_0(nativeObj, val);
-        
-        return;
-    }
-
+    // C++:  bool getUse1SERule()
+    private static native boolean getUse1SERule_0(long nativeObj);
 
     //
     // C++:  bool getTruncatePrunedTree()
     //
 
-    //javadoc: DTrees::getTruncatePrunedTree()
-    public  boolean getTruncatePrunedTree()
-    {
-        
-        boolean retVal = getTruncatePrunedTree_0(nativeObj);
-        
-        return retVal;
-    }
-
+    // C++:  void setUse1SERule(bool val)
+    private static native void setUse1SERule_0(long nativeObj, boolean val);
 
     //
     // C++:  void setTruncatePrunedTree(bool val)
     //
 
-    //javadoc: DTrees::setTruncatePrunedTree(val)
-    public  void setTruncatePrunedTree(boolean val)
-    {
-        
-        setTruncatePrunedTree_0(nativeObj, val);
-        
-        return;
-    }
-
+    // C++:  bool getTruncatePrunedTree()
+    private static native boolean getTruncatePrunedTree_0(long nativeObj);
 
     //
     // C++:  float getRegressionAccuracy()
     //
 
-    //javadoc: DTrees::getRegressionAccuracy()
-    public  float getRegressionAccuracy()
-    {
-        
-        float retVal = getRegressionAccuracy_0(nativeObj);
-        
-        return retVal;
-    }
-
+    // C++:  void setTruncatePrunedTree(bool val)
+    private static native void setTruncatePrunedTree_0(long nativeObj, boolean val);
 
     //
     // C++:  void setRegressionAccuracy(float val)
     //
 
-    //javadoc: DTrees::setRegressionAccuracy(val)
-    public  void setRegressionAccuracy(float val)
-    {
-        
-        setRegressionAccuracy_0(nativeObj, val);
-        
-        return;
-    }
-
+    // C++:  float getRegressionAccuracy()
+    private static native float getRegressionAccuracy_0(long nativeObj);
 
     //
     // C++:  Mat getPriors()
     //
 
-    //javadoc: DTrees::getPriors()
-    public  Mat getPriors()
-    {
-        
-        Mat retVal = new Mat(getPriors_0(nativeObj));
-        
-        return retVal;
-    }
-
+    // C++:  void setRegressionAccuracy(float val)
+    private static native void setRegressionAccuracy_0(long nativeObj, float val);
 
     //
     // C++:  void setPriors(Mat val)
     //
 
-    //javadoc: DTrees::setPriors(val)
-    public  void setPriors(Mat val)
-    {
-        
-        setPriors_0(nativeObj, val.nativeObj);
-        
-        return;
-    }
-
+    // C++:  Mat getPriors()
+    private static native long getPriors_0(long nativeObj);
 
     //
     // C++: static Ptr_DTrees create()
     //
-
-    //javadoc: DTrees::create()
-    public static DTrees create()
-    {
-        
-        DTrees retVal = new DTrees(create_0());
-        
-        return retVal;
-    }
-
-
-    @Override
-    protected void finalize() throws Throwable {
-        delete(nativeObj);
-    }
-
-
-
-    // C++:  int getMaxCategories()
-    private static native int getMaxCategories_0(long nativeObj);
-
-    // C++:  void setMaxCategories(int val)
-    private static native void setMaxCategories_0(long nativeObj, int val);
-
-    // C++:  int getMaxDepth()
-    private static native int getMaxDepth_0(long nativeObj);
-
-    // C++:  void setMaxDepth(int val)
-    private static native void setMaxDepth_0(long nativeObj, int val);
-
-    // C++:  int getMinSampleCount()
-    private static native int getMinSampleCount_0(long nativeObj);
-
-    // C++:  void setMinSampleCount(int val)
-    private static native void setMinSampleCount_0(long nativeObj, int val);
-
-    // C++:  int getCVFolds()
-    private static native int getCVFolds_0(long nativeObj);
-
-    // C++:  void setCVFolds(int val)
-    private static native void setCVFolds_0(long nativeObj, int val);
-
-    // C++:  bool getUseSurrogates()
-    private static native boolean getUseSurrogates_0(long nativeObj);
-
-    // C++:  void setUseSurrogates(bool val)
-    private static native void setUseSurrogates_0(long nativeObj, boolean val);
-
-    // C++:  bool getUse1SERule()
-    private static native boolean getUse1SERule_0(long nativeObj);
-
-    // C++:  void setUse1SERule(bool val)
-    private static native void setUse1SERule_0(long nativeObj, boolean val);
-
-    // C++:  bool getTruncatePrunedTree()
-    private static native boolean getTruncatePrunedTree_0(long nativeObj);
-
-    // C++:  void setTruncatePrunedTree(bool val)
-    private static native void setTruncatePrunedTree_0(long nativeObj, boolean val);
-
-    // C++:  float getRegressionAccuracy()
-    private static native float getRegressionAccuracy_0(long nativeObj);
-
-    // C++:  void setRegressionAccuracy(float val)
-    private static native void setRegressionAccuracy_0(long nativeObj, float val);
-
-    // C++:  Mat getPriors()
-    private static native long getPriors_0(long nativeObj);
 
     // C++:  void setPriors(Mat val)
     private static native void setPriors_0(long nativeObj, long val_nativeObj);
@@ -353,4 +158,116 @@ public class DTrees extends StatModel {
     // native support for java finalize()
     private static native void delete(long nativeObj);
 
+    //javadoc: DTrees::getMaxCategories()
+    public int getMaxCategories() {
+
+        return getMaxCategories_0(nativeObj);
+    }
+
+    //javadoc: DTrees::setMaxCategories(val)
+    public void setMaxCategories(int val) {
+
+        setMaxCategories_0(nativeObj, val);
+    }
+
+    //javadoc: DTrees::getMaxDepth()
+    public int getMaxDepth() {
+
+        return getMaxDepth_0(nativeObj);
+    }
+
+    //javadoc: DTrees::setMaxDepth(val)
+    public void setMaxDepth(int val) {
+
+        setMaxDepth_0(nativeObj, val);
+    }
+
+    //javadoc: DTrees::getMinSampleCount()
+    public int getMinSampleCount() {
+
+        return getMinSampleCount_0(nativeObj);
+    }
+
+    //javadoc: DTrees::setMinSampleCount(val)
+    public void setMinSampleCount(int val) {
+
+        setMinSampleCount_0(nativeObj, val);
+    }
+
+    //javadoc: DTrees::getCVFolds()
+    public int getCVFolds() {
+
+        return getCVFolds_0(nativeObj);
+    }
+
+    //javadoc: DTrees::setCVFolds(val)
+    public void setCVFolds(int val) {
+
+        setCVFolds_0(nativeObj, val);
+    }
+
+    //javadoc: DTrees::getUseSurrogates()
+    public boolean getUseSurrogates() {
+
+        return getUseSurrogates_0(nativeObj);
+    }
+
+    //javadoc: DTrees::setUseSurrogates(val)
+    public void setUseSurrogates(boolean val) {
+
+        setUseSurrogates_0(nativeObj, val);
+    }
+
+    //javadoc: DTrees::getUse1SERule()
+    public boolean getUse1SERule() {
+
+        return getUse1SERule_0(nativeObj);
+    }
+
+    //javadoc: DTrees::setUse1SERule(val)
+    public void setUse1SERule(boolean val) {
+
+        setUse1SERule_0(nativeObj, val);
+    }
+
+    //javadoc: DTrees::getTruncatePrunedTree()
+    public boolean getTruncatePrunedTree() {
+
+        return getTruncatePrunedTree_0(nativeObj);
+    }
+
+    //javadoc: DTrees::setTruncatePrunedTree(val)
+    public void setTruncatePrunedTree(boolean val) {
+
+        setTruncatePrunedTree_0(nativeObj, val);
+    }
+
+    //javadoc: DTrees::getRegressionAccuracy()
+    public float getRegressionAccuracy() {
+
+        return getRegressionAccuracy_0(nativeObj);
+    }
+
+    //javadoc: DTrees::setRegressionAccuracy(val)
+    public void setRegressionAccuracy(float val) {
+
+        setRegressionAccuracy_0(nativeObj, val);
+    }
+
+    //javadoc: DTrees::getPriors()
+    public Mat getPriors() {
+
+        return new Mat(getPriors_0(nativeObj));
+    }
+
+    //javadoc: DTrees::setPriors(val)
+    public void setPriors(Mat val) {
+
+        setPriors_0(nativeObj, val.nativeObj);
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        delete(nativeObj);
+    }
 }
